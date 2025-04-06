@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep Quality Predictor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f7;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select, button {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    .results {
+      margin-top: 2rem;
+      background-color: #f0f8ff;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    .results p {
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌙 Sleep Quality Predictor</h1>
+    <form id="sleepForm">
+      <label>Age</label>
+      <input type="number" name="age" required />
+
+      <label>Gender</label>
+      <select name="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+
+      <label>Occupation</label>
+      <select name="occupation">
+        <option value="Nurse">Nurse</option>
+        <option value="Engineer">Engineer</option>
+        <option value="Software Engineer">Software Engineer</option>
+        <option value="Accountant">Accountant</option>
+        <option value="Scientist">Scientist</option>
+        <option value="Lawyer">Lawyer</option>
+        <option value="Salesperson">Salesperson</option>
+        <option value="Manager">Manager</option>
+        <option value="Student">Student</option>
+        <option value="Athlete">Athlete</option>
+        <option value="Artist">Artist</option>
+        <option value="Doctor">Doctor</option>
+        <option value="Sales Representative">Sales Representative</option>
+
+      </select>
+
+      <label>Sleep Duration (hours)</label>
+      <input type="number" name="sleepDuration" required />
+
+      <label>Physical Activity Level (0-10)</label>
+      <input type="number" name="activityLevel" required />
+
+      <label>Stress Level (1-10)</label>
+      <input type="number" name="stressLevel" required />
+
+      <label>Daily Steps</label>
+      <input type="number" name="steps" required />
+
+      <label>Weight (kg)</label>
+      <input type="number" name="weight" required />
+
+      <label>Height (cm)</label>
+      <input type="number" name="height" required />
+
+      <label>Systolic BP</label>
+      <input type="number" name="systolic" required />
+
+      <label>Diastolic BP</label>
+      <input type="number" name="diastolic" required />
+
+      <label>Heart Rate</label>
+      <input type="number" name="heartRate" required />
+
+      <button type="submit">Predict Sleep Quality</button>
+    </form>
+
+    <div class="results" id="results" style="display:none">
+      <h3>📊 Your BMI Results</h3>
+      <p id="bmiValue"></p>
+      <p id="bmiCategory"></p>
+
+      <h3>📈 Sleep Quality Prediction</h3>
+      <p>Predicted Sleep Quality: <span id="sleepScore"></span>/10</p>
+
+      <h3>🚨 Sleep Disorder Risk</h3>
+      <p id="disorderRisk"></p>
+
+      <h3>🔹 Predicted Quality of Sleep</h3>
+      <p><span id="sleepScoreRepeat"></span>/10</p>
+
+      <h3>🌜 Sleep Analysis Report</h3>
+      <p id="durationFeedback"></p>
+
+      <h3>🛌 Quality Assessment</h3>
+      <p>👍 Good, but room for improvement</p>
+
+      <h3>💡 Personalized Recommendations</h3>
+
+      <h4>🌙 Universal Sleep Tips</h4>
+      <ul>
+        <li>📵 Create a tech-free zone 1 hour before bed</li>
+        <li>🌡️ Keep bedroom temperature between 60-67°F (15-19°C)</li>
+        <li>🛏️ Reserve bed only for sleep (no work or TV)</li>
+      </ul>
+
+      <h4>☀️ Morning Boosters</h4>
+      <ul>
+        <li>Open curtains immediately upon waking</li>
+      </ul>
+
+      <p>💬 Remember: Small consistent changes make the biggest difference!</p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('sleepForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const form = event.target;
+
+      const weight = parseFloat(form.weight.value);
+      const height = parseFloat(form.height.value);
+      const bmi = weight / ((height / 100) ** 2);
+
+      let bmiCategory = '';
+      if (bmi < 18.5) bmiCategory = 'Underweight';
+      else if (bmi < 25) bmiCategory = 'Normal';
+      else if (bmi < 30) bmiCategory = 'Overweight';
+      else bmiCategory = 'Obese';
+
+      const sleepDuration = parseFloat(form.sleepDuration.value);
+      let sleepScore = (10 - Math.abs(8 - sleepDuration)) + (10 - parseFloat(form.stressLevel.value)) / 2;
+      sleepScore = Math.max(0, Math.min(10, sleepScore.toFixed(1)));
+
+      document.getElementById('bmiValue').innerText = `BMI Value: ${bmi.toFixed(2)}`;
+      document.getElementById('bmiCategory').innerText = `Category: ${bmiCategory}`;
+      document.getElementById('sleepScore').innerText = sleepScore;
+      document.getElementById('sleepScoreRepeat').innerText = sleepScore;
+      document.getElementById('disorderRisk').innerText = sleepScore < 5 ? '⚠️ High risk. Consider consulting a doctor.' : '✅ Low risk. Maintain healthy sleep habits.';
+      document.getElementById('durationFeedback').innerText = `Sleep Duration: ${sleepDuration} hours (${sleepDuration >= 7 && sleepDuration <= 9 ? '✅ Optimal duration' : '⚠️ Try to aim for 7–9 hours'})`;
+
+      document.getElementById('results').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
